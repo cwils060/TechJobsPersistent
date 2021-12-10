@@ -11,7 +11,7 @@ Select * From Employers
 Where Location = "St. Louis City";
 
 --Part 3
-Select skills.Name as Skill_Name, skills.description as SKill_Description
+Select jobSkills.JobId as Job_ID, skills.Name as Skill_Name, skills.description as SKill_Description
 From skills
 JOIN JobSkills On skills.Id = JobSkills.skillId
 Where Jobskills.JobId IS NOT NULL
