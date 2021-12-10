@@ -24,35 +24,101 @@ namespace TechJobsPersistent.Controllers
 
         public IActionResult Index()
         {
+
             List<Job> jobs = context.Jobs.Include(j => j.Employer).ToList();
+
+
+
 
             return View(jobs);
         }
 
+
+
+
+
+
         [HttpGet("/Add")]
         public IActionResult AddJob()
         {
-            return View();
+
+            List<Employer> possibleEmployers = context.Employers.ToList();
+            List<Skill> possibleSkills = context.Skills.ToList();
+            AddJobViewModel addJobViewModel = new AddJobViewModel(possibleEmployers, possibleSkills);
+
+
+            return View(addJobViewModel);
         }
 
-        public IActionResult ProcessAddJobForm()
+
+
+        [HttpPost]
+        public IActionResult ProcessAddJobForm(AddJobViewModel addJobViewModel, string[] selectedSkills)
         {
-            return View();
+
+            if (ModelState.IsValid)
+            {
+
+                Job newJob = new Job
+                {
+                    Name = addJobViewModel.Name,
+                    EmployerId = addJobViewModel.EmployerId,
+                    Employer = context.Employers.Find(addJobViewModel.EmployerId)
+                };
+
+             
+                {
+                    for (var i = 0; i < selectedSkills.Length; i++)
+                    {
+
+
+                        JobSkill jobSkill = new JobSkill
+                        {
+
+
+                            JobId = newJob.Id,
+                            Job = newJob,
+                            SkillId = int.Parse(selectedSkills[i]),
+                            Skill = context.Skills.Find(addJobViewModel.SkillId),
+                        };
+
+                            context.JobSkills.Add(jobSkill);
+
+                    }
+
+          
+                    }
+
+
+                
+                context.Jobs.Add(newJob);
+                context.SaveChanges();
+
+                return Redirect("Index");
+
+            }
+
+            return View("AddJob", addJobViewModel);
         }
 
         public IActionResult Detail(int id)
         {
-            Job theJob = context.Jobs
-                .Include(j => j.Employer)
-                .Single(j => j.Id == id);
+            
+                Job theJob = context.Jobs
+                    .Include(j => j.Employer)
+                    .Single(j => j.Id == id);
 
-            List<JobSkill> jobSkills = context.JobSkills
-                .Where(js => js.JobId == id)
-                .Include(js => js.Skill)
-                .ToList();
 
-            JobDetailViewModel viewModel = new JobDetailViewModel(theJob, jobSkills);
-            return View(viewModel);
+                List<JobSkill> jobSkills = context.JobSkills
+                    .Where(js => js.JobId == id)
+                    .Include(js => js.Skill)
+                    .ToList();
+
+                JobDetailViewModel viewModel = new JobDetailViewModel(theJob, jobSkills);
+
+
+                return View(viewModel);
+           
         }
     }
 }

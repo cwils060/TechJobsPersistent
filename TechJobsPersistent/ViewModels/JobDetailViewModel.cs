@@ -1,6 +1,7 @@
 ﻿using System;
 using TechJobsPersistent.Models;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace TechJobsPersistent.ViewModels
 {
@@ -10,6 +11,7 @@ namespace TechJobsPersistent.ViewModels
         public string Name { get; set; }
         public string EmployerName { get; set; }
         public string SkillText { get; set; }
+        public List<JobSkill> jobSkills { get; set; }
 
         public JobDetailViewModel(Job theJob, List<JobSkill> jobSkills)
         {
@@ -18,13 +20,17 @@ namespace TechJobsPersistent.ViewModels
             EmployerName = theJob.Employer.Name;
 
             SkillText = "";
+            
             for (int i = 0; i < jobSkills.Count; i++)
+           
             {
                 SkillText += jobSkills[i].Skill.Name;
+
                 if (i < jobSkills.Count - 1)
                 {
-                    SkillText += ", ";
+                    SkillText += ",";
                 }
+               
             }
         }
     }

@@ -28,6 +28,7 @@ namespace TechJobsPersistent.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Results(string searchType, string searchTerm)
         {
             List<Job> jobs;
