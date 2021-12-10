@@ -14,4 +14,6 @@ Where Location = "St. Louis City";
 Select skills.Name as Skill_Name, skills.description as SKill_Description
 From skills
 JOIN JobSkills On skills.Id = JobSkills.skillId
+Where Jobskills.JobId IS NOT NULL
 Order by skills.Name asc;
+
